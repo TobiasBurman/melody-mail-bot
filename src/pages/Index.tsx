@@ -36,9 +36,18 @@ const Index = () => {
     subject: '',
     content: `Hej [KONTAKTPERSON]!
 
-Jag heter [DITT NAMN] och arbetar som musikproducent med specialisering på [BRANSCH]-segmentet.
+Jag heter [DITT NAMN] och arbetar som musikproducent med specialisering på kommersiell musik och ljudbranding.
 
-Jag har sett att [FÖRETAG] är aktiva inom [BRANSCH] och tänkte att vi kanske kunde utforska möjligheter att samarbeta kring musik och ljudproduktion för era projekt.
+Jag har sett att [FÖRETAG] är ett framgångsrikt företag inom [BRANSCH] och tänkte att ni kanske skulle vara intresserade av professionell musikproduktion för:
+
+• Reklamkampanjer och marknadsföring
+• Bakgrundsmusik för butiker/lokaler  
+• Event och företagsarrangemang
+• Ljudbranding och varumärkesmusik
+
+Jag har tidigare arbetat med liknande företag och kan skräddarsy musik som stärker ert varumärke.
+
+Skulle ni vara intresserade av en kort presentation av vad jag kan erbjuda [FÖRETAG]?
 
 Med vänliga hälsningar,
 [DITT NAMN]
@@ -241,11 +250,11 @@ Musikproducent`
                     <SelectValue placeholder="Välj bransch" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="bilreklam">Bilreklam & Fordonsgrafik</SelectItem>
-                    <SelectItem value="matreklam">Matreklam & Restauranger</SelectItem>
-                    <SelectItem value="detaljhandel">Detaljhandel & Butiker</SelectItem>
-                    <SelectItem value="event">Event & Catering</SelectItem>
-                    <SelectItem value="marknadsföring">Marknadsföringsbyråer</SelectItem>
+                    <SelectItem value="bilreklam">Bilföretag & Fordonstillverkare</SelectItem>
+                    <SelectItem value="matreklam">Restauranger & Livsmedelsföretag</SelectItem>
+                    <SelectItem value="detaljhandel">Detaljhandel & Kedjor</SelectItem>
+                    <SelectItem value="event">Hotell & Eventföretag</SelectItem>
+                    <SelectItem value="marknadsföring">Företag med Marknadsavdelningar</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
