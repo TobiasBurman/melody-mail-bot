@@ -298,7 +298,7 @@ Musikproducent`
                 ) : (
                   <>
                     <Search className="mr-2 h-4 w-4" />
-                    Sök Företag Automatiskt
+                    Sök 50+ Företag Automatiskt
                   </>
                 )}
               </Button>
