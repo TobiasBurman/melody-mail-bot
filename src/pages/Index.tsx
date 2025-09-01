@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Search, Send, Building2 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Loader2, Search, Send, Building2, Eye, ArrowLeft, Mail } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Organization {
@@ -20,6 +21,7 @@ interface Organization {
   contact_person?: string;
   company_size?: string;
   notes?: string;
+  selected?: boolean;
 }
 
 const Index = () => {
@@ -27,6 +29,7 @@ const Index = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [selectedOrganizations, setSelectedOrganizations] = useState<Organization[]>([]);
+  const [showPreview, setShowPreview] = useState(false);
   const [campaign, setCampaign] = useState({
     name: '',
     industry: '',
@@ -63,7 +66,7 @@ Musikproducent`
 
       if (error) throw error;
 
-      setSelectedOrganizations(data.companies || []);
+      setSelectedOrganizations((data.companies || []).map((org: Organization) => ({ ...org, selected: true })));
       
       toast({
         title: "Företagssökning klar!",
@@ -82,7 +85,21 @@ Musikproducent`
     }
   };
 
-  const handleSendCampaign = async () => {
+  const toggleOrganization = (orgId: string) => {
+    setSelectedOrganizations(prev => 
+      prev.map(org => 
+        org.id === orgId 
+          ? { ...org, selected: !org.selected }
+          : org
+      )
+    );
+  };
+
+  const getSelectedOrganizations = () => {
+    return selectedOrganizations.filter(org => org.selected !== false);
+  };
+
+  const handleShowPreview = () => {
     if (!campaign.name || !campaign.subject || !campaign.content) {
       toast({
         title: "Fel", 
@@ -95,7 +112,30 @@ Musikproducent`
     if (selectedOrganizations.length === 0) {
       toast({
         title: "Fel",
-        description: "Sök och välj företag innan du skickar kampanjen",
+        description: "Sök och välj företag innan du förhandsgranskar kampanjen",
+        variant: "destructive", 
+      });
+      return;
+    }
+
+    setShowPreview(true);
+  };
+
+  const handleSendCampaign = async () => {
+    if (!campaign.name || !campaign.subject || !campaign.content) {
+      toast({
+        title: "Fel", 
+        description: "Fyll i alla obligatoriska fält",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const selectedOrgs = getSelectedOrganizations();
+    if (selectedOrgs.length === 0) {
+      toast({
+        title: "Fel",
+        description: "Välj minst ett företag innan du skickar kampanjen",
         variant: "destructive", 
       });
       return;
@@ -122,7 +162,7 @@ Musikproducent`
       const { data, error } = await supabase.functions.invoke('send-campaign', {
         body: {
           campaignId: campaignData.id,
-          organizationIds: selectedOrganizations.map(org => org.id),
+          organizationIds: selectedOrgs.map(org => org.id),
           subject: campaign.subject,
           content: campaign.content
         }
@@ -143,6 +183,7 @@ Musikproducent`
         content: campaign.content // Behåll mallen
       });
       setSelectedOrganizations([]);
+      setShowPreview(false);
 
     } catch (error: any) {
       console.error('Fel vid kampanjutskick:', error);
@@ -234,39 +275,56 @@ Musikproducent`
               </p>
             </div>
 
-            <Button 
-              onClick={handleSearchCompanies}
-              disabled={isSearching || !campaign.industry}
-              className="w-full"
-            >
-              {isSearching ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Söker företag...
-                </>
-              ) : (
-                <>
-                  <Search className="mr-2 h-4 w-4" />
-                  Sök Företag Automatiskt
-                </>
+            <div className="flex gap-2">
+              <Button 
+                onClick={handleSearchCompanies}
+                disabled={isSearching || !campaign.industry}
+                className="flex-1"
+              >
+                {isSearching ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Söker företag...
+                  </>
+                ) : (
+                  <>
+                    <Search className="mr-2 h-4 w-4" />
+                    Sök Företag Automatiskt
+                  </>
+                )}
+              </Button>
+
+              {selectedOrganizations.length > 0 && !showPreview && (
+                <Button 
+                  onClick={handleShowPreview}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  <Eye className="mr-2 h-4 w-4" />
+                  Förhandsgranska ({getSelectedOrganizations().length})
+                </Button>
               )}
-            </Button>
+            </div>
           </CardContent>
         </Card>
 
-        {selectedOrganizations.length > 0 && (
+        {selectedOrganizations.length > 0 && !showPreview && (
           <Card>
             <CardHeader>
               <CardTitle>Hittade Företag ({selectedOrganizations.length})</CardTitle>
               <CardDescription>
-                Dessa företag kommer att få ditt meddelande
+                Välj vilka företag som ska få ditt meddelande
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-3 mb-4">
+              <div className="grid gap-3 mb-4 max-h-96 overflow-y-auto">
                 {selectedOrganizations.map((org) => (
-                  <div key={org.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
+                  <div key={org.id} className="flex items-center space-x-3 p-3 border rounded-lg">
+                    <Checkbox
+                      checked={org.selected !== false}
+                      onCheckedChange={() => toggleOrganization(org.id)}
+                    />
+                    <div className="flex-1">
                       <h4 className="font-medium">{org.name}</h4>
                       <p className="text-sm text-muted-foreground">{org.email}</p>
                       {org.contact_person && (
@@ -285,24 +343,81 @@ Musikproducent`
                 ))}
               </div>
               
-              <Button 
-                onClick={handleSendCampaign}
-                disabled={isSending}
-                className="w-full"
-                size="lg"
-              >
-                {isSending ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Skickar kampanj...
-                  </>
-                ) : (
-                  <>
-                    <Send className="mr-2 h-4 w-4" />
-                    Skicka till Alla ({selectedOrganizations.length} företag)
-                  </>
-                )}
-              </Button>
+              <div className="text-sm text-muted-foreground mb-3">
+                {getSelectedOrganizations().length} av {selectedOrganizations.length} företag valda
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {showPreview && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Mail className="h-5 w-5" />
+                Förhandsgranskning - {getSelectedOrganizations().length} Mottagare
+              </CardTitle>
+              <CardDescription>
+                Kontrollera alla e-postadresser innan kampanjen skickas
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-3">
+                <h3 className="font-medium">Kampanjdetaljer:</h3>
+                <div className="bg-muted/50 p-4 rounded-lg space-y-2">
+                  <p><span className="font-medium">Namn:</span> {campaign.name}</p>
+                  <p><span className="font-medium">Ämne:</span> {campaign.subject}</p>
+                  <p><span className="font-medium">Bransch:</span> {campaign.industry}</p>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="font-medium">E-postadresser som kommer få meddelandet:</h3>
+                <div className="bg-muted/50 p-4 rounded-lg max-h-48 overflow-y-auto">
+                  {getSelectedOrganizations().map((org, index) => (
+                    <div key={org.id} className="flex items-center justify-between py-2 border-b border-muted last:border-b-0">
+                      <div>
+                        <span className="font-medium">{org.name}</span>
+                        <span className="text-muted-foreground ml-2">({org.contact_person || 'Ingen kontaktperson'})</span>
+                      </div>
+                      <code className="text-sm bg-background px-2 py-1 rounded">{org.email}</code>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Totalt: <span className="font-medium">{getSelectedOrganizations().length}</span> e-postmeddelanden kommer att skickas
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <Button 
+                  onClick={() => setShowPreview(false)}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Tillbaka för Redigering
+                </Button>
+                
+                <Button 
+                  onClick={handleSendCampaign}
+                  disabled={isSending}
+                  className="flex-1"
+                  size="lg"
+                >
+                  {isSending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Skickar kampanj...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="mr-2 h-4 w-4" />
+                      Bekräfta & Skicka ({getSelectedOrganizations().length} e-post)
+                    </>
+                  )}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         )}
