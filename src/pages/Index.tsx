@@ -255,6 +255,8 @@ Musikproducent`
                     <SelectItem value="detaljhandel">Detaljhandel & Kedjor</SelectItem>
                     <SelectItem value="event">Hotell & Eventföretag</SelectItem>
                     <SelectItem value="marknadsföring">Företag med Marknadsavdelningar</SelectItem>
+                    <SelectItem value="stora-företag">Stora Företag (1000+ anställda)</SelectItem>
+                    <SelectItem value="små-företag">Små Företag (1-50 anställda)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
