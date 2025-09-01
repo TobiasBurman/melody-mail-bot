@@ -69,7 +69,7 @@ Musikproducent`
       const { data, error } = await supabase.functions.invoke('search-companies', {
         body: {
           industry: campaign.industry,
-          limit: 20
+          limit: 100
         }
       });
 
@@ -300,7 +300,7 @@ Musikproducent`
                 ) : (
                   <>
                     <Search className="mr-2 h-4 w-4" />
-                    Sök 50+ Företag Automatiskt
+                    Sök 100+ Företag Automatiskt
                   </>
                 )}
               </Button>
