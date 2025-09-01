@@ -14,7 +14,249 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      campaign_results: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          error_message: string | null
+          id: string
+          opened_at: string | null
+          organization_id: string
+          replied_at: string | null
+          sent_at: string | null
+          status: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          opened_at?: string | null
+          organization_id: string
+          replied_at?: string | null
+          sent_at?: string | null
+          status?: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          opened_at?: string | null
+          organization_id?: string
+          replied_at?: string | null
+          sent_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_results_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_results_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaigns: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          opened_count: number
+          replied_count: number
+          sent_count: number
+          status: string
+          subject: string
+          target_industry: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          opened_count?: number
+          replied_count?: number
+          sent_count?: number
+          status?: string
+          subject: string
+          target_industry: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          opened_count?: number
+          replied_count?: number
+          sent_count?: number
+          status?: string
+          subject?: string
+          target_industry?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      demo_files: {
+        Row: {
+          created_at: string
+          description: string | null
+          file_size: number | null
+          file_type: string
+          file_url: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          file_size?: number | null
+          file_type: string
+          file_url: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          file_size?: number | null
+          file_type?: string
+          file_url?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      email_templates: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          industry: string
+          name: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          industry: string
+          name: string
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          industry?: string
+          name?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      organizations: {
+        Row: {
+          company_size: string | null
+          contact_person: string | null
+          created_at: string
+          email: string
+          id: string
+          industry: string
+          location: string | null
+          name: string
+          notes: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          company_size?: string | null
+          contact_person?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          industry: string
+          location?: string | null
+          name: string
+          notes?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          company_size?: string | null
+          contact_person?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          industry?: string
+          location?: string | null
+          name?: string
+          notes?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      portfolio_projects: {
+        Row: {
+          audio_url: string | null
+          client: string | null
+          completion_date: string | null
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          industry: string | null
+          project_type: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          audio_url?: string | null
+          client?: string | null
+          completion_date?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          image_url?: string | null
+          industry?: string | null
+          project_type?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          audio_url?: string | null
+          client?: string | null
+          completion_date?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          industry?: string | null
+          project_type?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
