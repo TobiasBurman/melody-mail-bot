@@ -207,25 +207,28 @@ Musikproducent`
   };
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">
-            E-postbot för Musikproducenter
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Hitta och kontakta företag inom bilreklam, matreklam och andra branscher automatiskt
+    <div className="min-h-screen p-4 relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/10 pointer-events-none" />
+      <div className="max-w-4xl mx-auto space-y-6 relative">
+        <div className="text-center mb-8 py-12">
+          <div className="inline-block px-8 py-4 gradient-primary rounded-2xl shadow-2xl mb-6">
+            <h1 className="text-4xl font-bold text-primary-foreground mb-2">
+              🎵 E-postbot för Musikproducenter
+            </h1>
+          </div>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Hitta och kontakta företag inom bilreklam, matreklam och andra branscher automatiskt med AI-driven precision
           </p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <Card className="glass-effect shadow-xl border-0">
+          <CardHeader className="gradient-secondary rounded-t-lg">
+            <CardTitle className="flex items-center gap-2 text-accent-foreground">
               <Building2 className="h-5 w-5" />
               Skapa Ny Kampanj
             </CardTitle>
-            <CardDescription>
-              Ange kampanjdetaljer och sök efter relevanta företag
+            <CardDescription className="text-accent-foreground/80">
+              Ange kampanjdetaljer och sök efter relevanta företag med AI-assistans
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -290,7 +293,7 @@ Musikproducent`
               <Button 
                 onClick={handleSearchCompanies}
                 disabled={isSearching || !campaign.industry}
-                className="flex-1"
+                className="flex-1 gradient-primary border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
               >
                 {isSearching ? (
                   <>
@@ -300,7 +303,7 @@ Musikproducent`
                 ) : (
                   <>
                     <Search className="mr-2 h-4 w-4" />
-                    Sök 100+ Företag Automatiskt
+                    🚀 Sök 100+ Företag Automatiskt
                   </>
                 )}
               </Button>
@@ -309,7 +312,7 @@ Musikproducent`
                 <Button 
                   onClick={handleShowPreview}
                   variant="outline"
-                  className="flex-1"
+                  className="flex-1 border-primary/30 bg-accent/20 hover:bg-accent/40 transition-all duration-300 hover:scale-[1.02]"
                 >
                   <Eye className="mr-2 h-4 w-4" />
                   Förhandsgranska ({getSelectedOrganizations().length})
@@ -320,34 +323,39 @@ Musikproducent`
         </Card>
 
         {selectedOrganizations.length > 0 && !showPreview && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Hittade Företag ({selectedOrganizations.length})</CardTitle>
-              <CardDescription>
+          <Card className="glass-effect shadow-xl border-0">
+            <CardHeader className="gradient-secondary rounded-t-lg">
+              <CardTitle className="text-accent-foreground">
+                🎯 Hittade Företag ({selectedOrganizations.length})
+              </CardTitle>
+              <CardDescription className="text-accent-foreground/80">
                 Välj vilka företag som ska få ditt meddelande
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-3 mb-4 max-h-96 overflow-y-auto">
                 {selectedOrganizations.map((org) => (
-                  <div key={org.id} className="flex items-center space-x-3 p-3 border rounded-lg">
+                  <div key={org.id} className="flex items-center space-x-3 p-4 border rounded-xl bg-gradient-to-r from-card to-muted/20 hover:shadow-md transition-all duration-200 hover:scale-[1.01]">
                     <Checkbox
                       checked={org.selected !== false}
                       onCheckedChange={() => toggleOrganization(org.id)}
+                      className="border-primary data-[state=checked]:bg-primary"
                     />
                     <div className="flex-1">
-                      <h4 className="font-medium">{org.name}</h4>
+                      <h4 className="font-medium text-card-foreground">{org.name}</h4>
                       <p className="text-sm text-muted-foreground">{org.email}</p>
                       {org.contact_person && (
                         <p className="text-sm text-muted-foreground">
-                          Kontakt: {org.contact_person}
+                          👤 Kontakt: {org.contact_person}
                         </p>
                       )}
                     </div>
                     <div className="flex flex-col items-end gap-1">
-                      <Badge variant="secondary">{org.industry}</Badge>
+                      <Badge className="gradient-primary border-0 text-primary-foreground">
+                        {org.industry}
+                      </Badge>
                       {org.location && (
-                        <span className="text-xs text-muted-foreground">{org.location}</span>
+                        <span className="text-xs text-muted-foreground">📍 {org.location}</span>
                       )}
                     </div>
                   </div>
@@ -362,13 +370,13 @@ Musikproducent`
         )}
 
         {showPreview && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+          <Card className="glass-effect shadow-xl border-0">
+            <CardHeader className="gradient-secondary rounded-t-lg">
+              <CardTitle className="flex items-center gap-2 text-accent-foreground">
                 <Mail className="h-5 w-5" />
-                Förhandsgranskning - {getSelectedOrganizations().length} Mottagare
+                ✨ Förhandsgranskning - {getSelectedOrganizations().length} Mottagare
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-accent-foreground/80">
                 Kontrollera alla e-postadresser innan kampanjen skickas
               </CardDescription>
             </CardHeader>
@@ -413,7 +421,7 @@ Musikproducent`
                 <Button 
                   onClick={handleSendCampaign}
                   disabled={isSending}
-                  className="flex-1"
+                  className="flex-1 gradient-primary border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
                   size="lg"
                 >
                   {isSending ? (
@@ -424,7 +432,7 @@ Musikproducent`
                   ) : (
                     <>
                       <Send className="mr-2 h-4 w-4" />
-                      Bekräfta & Skicka ({getSelectedOrganizations().length} e-post)
+                      🚀 Bekräfta & Skicka ({getSelectedOrganizations().length} e-post)
                     </>
                   )}
                 </Button>
